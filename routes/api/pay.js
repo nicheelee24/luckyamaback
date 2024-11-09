@@ -840,7 +840,7 @@ router.post("/bigpayz_withdraw", auth, async (req, res) => {
         const merchant_code = process.env.MerchantCode;
         const ref_id = require('crypto').randomBytes(6).toString('hex');;
         const player_username = user.phone.toString();
-        const player_ip = "206.206.77.139";
+        const player_ip = "82.112.236.107";
         const currency_code = "THB";
 
         const bank_code = "KSKB";
