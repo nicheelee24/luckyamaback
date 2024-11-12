@@ -902,9 +902,7 @@ router.post("/bigpayz_withdraw", auth, async (req, res) => {
 
                     });
                 }
-                else {
-
-                }
+                
                 /*
                 {
                     success: true,
@@ -917,7 +915,7 @@ router.post("/bigpayz_withdraw", auth, async (req, res) => {
                     }
                 }
                 */
-                if (response.data.success) {
+                if (response.data.error_code==0) {
                     const { orderNo, requestAmount, status, sign } =
                         response.data.data;
                     try {
