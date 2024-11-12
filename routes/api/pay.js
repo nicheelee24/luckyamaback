@@ -902,7 +902,14 @@ router.post("/bigpayz_withdraw", auth, async (req, res) => {
 
                     });
                 }
-                
+                if (response.data.error_code == 401) {
+                    res.send({
+                        code: '401',
+                        success: false,
+                        message: response.data.message,
+
+                    });
+                }
                 /*
                 {
                     success: true,
