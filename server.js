@@ -61,6 +61,7 @@ app.use("/api/transaction", require("./routes/api/transaction"));
 app.use("/api/util", require("./routes/api/util"));
 app.use("/api/promotion", require("./routes/api/promotion"));
 app.use("/api/bet", require("./routes/api/bet"));
+app.use("/api/saveuserpromotion", require("./routes/api/saveuserpromotion"));
 
 app.use("/bandai/api/auth", require("./routes/bandai/auth"));
 app.use("/bandai/api/agent", require("./routes/bandai/agent"));

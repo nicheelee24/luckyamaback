@@ -18,7 +18,7 @@ const promotionSchema = new mongoose.Schema({
         type: String,
     },
     expDate: {
-        type: Date,
+        type: String,
     },
    
     bonusType: {
