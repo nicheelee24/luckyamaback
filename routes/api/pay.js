@@ -9,6 +9,7 @@ const fs = require("fs");
 
 const Transaction = require("../../models/Transaction");
 const User = require("../../models/User");
+const Promotion = require("../../models/Promotion");
 const Bet = require("../../models/Bet");
 const Log = require("../../models/Log");
 const Bigp = require("../../models/Bigp");
@@ -23,7 +24,7 @@ router.post("/smartpay/:chanlType", auth, async (req, res) => {
     const chnlType = req.params.chanlType;
     const user = await User.findById(req.user.id).select("-password");
     //const bankCode = "T_BBL";
-   // let customNo = "000777";
+    // let customNo = "000777";
     let channleType;
     const url = "https://mgp-pay.com:8443";
     let endpoint;
@@ -116,14 +117,14 @@ router.post("/smartpay/:chanlType", auth, async (req, res) => {
             .then(function (resonse) {
                 // console.log("response..." + resonse.data);
                 const resp = resonse.data;
-                console.log("deposit response...."+resp.code);
+                console.log("deposit response...." + resp.code);
                 console.log(resp.msg);
                 if (resp.code != -1) {
                     console.log(resp['detail'].PayURL);
-                    res.send({ PayUrl: resp['detail'].PayURL, code: 0,gateway:'spay' });
+                    res.send({ PayUrl: resp['detail'].PayURL, code: 0, gateway: 'spay' });
                     const dataToSignQuery = `date=${todayDateTime}&merchantNo=${merchantNo}&orderNo=${orderNo}&signType=${signType}&version=${version}${hashKey}`;
                     console.log(dataToSignQuery);
-                    
+
                     const signQuery = generateMD5(dataToSignQuery);
                     console.log(signQuery);
                     endpoint = "/api/defray/queryV2";
@@ -167,10 +168,9 @@ router.post("/smartpay/:chanlType", auth, async (req, res) => {
                             console.log("Smart pay bank api response success..");
                         })
                 }
-                else
-                {
+                else {
                     console.log(resp.msg);
-                    res.send({ PayUrl: '',msg:resp.msg, code: resp.code,gateway:'spay' });
+                    res.send({ PayUrl: '', msg: resp.msg, code: resp.code, gateway: 'spay' });
 
                 }
 
@@ -607,7 +607,7 @@ router.post("/deposit_bigpay", auth, async (req, res) => {
                     },
                 }
             )
-            .then(function (resonse) {
+            .then(async function (resonse) {
                 console.log("response..." + resonse.data);
                 const resp = resonse.data;
                 console.log(resp);
@@ -638,7 +638,7 @@ router.post("/deposit_bigpay", auth, async (req, res) => {
                             responseCode: 0,
                             type: "deposit",
                             provider: 'bigpayz',
-                           // trxNo: resp.invoice_number,
+                            // trxNo: resp.invoice_number,
                         });
                         transaction.save();
 
@@ -667,13 +667,79 @@ router.post("/deposit_bigpay", auth, async (req, res) => {
                     // res.json({ status: "0000"});
 
                     console.log("resulttt----->" + resp.redirect_to);
-                    res.send({ PayUrl: resp.redirect_to, code: 0,gateway:'bpay' });
+                    res.send({ PayUrl: resp.redirect_to, code: 0, gateway: 'bpay' });
                 } else {
                     console.log("Error calling bigpay deposit function");
                     if (resp.error_code == 209) {
                         res.send({ error: "API Response Code", code: resp.error_code, msg: resp.error_message, PayUrl: "" });
                     }
                     else if (resp.error_code == 103) {
+                        // write the code for if user have promotion code then check the promotion accordingly add the bonous 
+                        if (user && user?.promotionId) {
+                            const userPromotionInfo = await Promotion.findById(user.promotionId)
+                            let promotionPermissions = userPromotionInfo.permissions;
+                            if (userPromotionInfo && userPromotionInfo?.expDate) {
+
+                                const expDateString = userPromotionInfo.expDate;
+                                const [day, month, year] = expDateString.split('-');
+                                const formattedDateString = `${year}-${month}-${day}`;
+
+                                const expDateTimeStamp = new Date(formattedDateString).getTime();
+
+                                const currentDate = new Date();
+                                const currentDay = String(currentDate.getDate()).padStart(2, '0');  // Ensure day is 2 digits
+                                const currentMonth = String(currentDate.getMonth() + 1).padStart(2, '0');  // getMonth() is 0-based
+                                const currentYear = currentDate.getFullYear();
+                                const currentFormattedDateString = `${currentYear}-${currentMonth}-${currentDay}`;
+
+                                const currentDateTimeStamp = new Date(currentFormattedDateString).getTime();
+                                checkUserPlanExpire = expDateTimeStamp >= currentDateTimeStamp;
+
+                                if (checkUserPlanExpire) {
+
+                                    let highestPercent = userPromotionInfo.highestPercent;
+                                    let bonusAmnt = userPromotionInfo.bonusAmnt;
+                                    let depositAmnt = userPromotionInfo.depositAmnt;
+                                    let userDepositeAmount = req.body.amount;
+                                    let userBalance = user.balance;
+                                    let calculateDiscount = 0;
+                                    if (highestPercent && highestPercent > 0) {
+                                        calculateDiscount =  req.body.amount * bonusAmnt / 100;
+                                    } else {
+                                        calculateDiscount = bonusAmnt;
+                                    }
+
+                                    if (userDepositeAmount >= depositAmnt && (promotionPermissions.includes("forFirstDeposit") || promotionPermissions.includes("autoBonus"))) {
+                                        if(promotionPermissions.includes("forFirstDeposit")) {
+																					const todayStart = new Date(new Date().toISOString().split('T')[0] + 'T00:00:00.000Z');
+																					const todayEnd = new Date(new Date().toISOString().split('T')[0] + 'T23:59:59.999Z');
+																					const result = await Transaction.find({
+																							"date": {
+																								$gte: todayStart,
+																								$lt: todayEnd
+																							},
+																							userid: req.user.id
+																						});
+																						if(result.length == 0) {
+																							userBalance = userBalance + calculateDiscount;
+																							// Update the user's Promotion in the database
+																							user.balance = userBalance;
+																							await user.save();
+																						}	
+																				}
+																				if(promotionPermissions.includes("autoBonus")) {
+																						userBalance = userBalance + calculateDiscount;
+																						// Update the user's Promotion in the database
+																						user.balance = userBalance;
+																						await user.save();
+																				}
+                                        
+                                    }
+                                }
+                            }
+                        }
+
+                        // end code 
                         res.send({ error: "API Response Code", code: resp.error_code, msg: resp.message, PayUrl: "" });
                     }
                     else {
@@ -794,7 +860,7 @@ router.post("/bigpayz_withdraw", auth, async (req, res) => {
 
         // Start Check turnover
         // check playing amount should be over withdrawal amount.
-        console.log("user data>" + user);
+        console.log("user data>33" + user);
 
         console.log("user data not empty");
         const result = await Bet.aggregate([
@@ -891,8 +957,8 @@ router.post("/bigpayz_withdraw", auth, async (req, res) => {
                     },
                 }
             )
-            .then(function (response) {
-                console.log("bigpay response...");
+            .then(async function (response) {
+                console.log("bigpay response...11111");
                 console.log(response.data);
                 if (response.data.error_code == 203) {
                     res.send({
@@ -922,7 +988,7 @@ router.post("/bigpayz_withdraw", auth, async (req, res) => {
                     }
                 }
                 */
-                if (response.data.error_code==0) {
+                if (response.data.error_code == 0) {
                     const { orderNo, requestAmount, status, sign } =
                         response.data.data;
                     try {
@@ -955,10 +1021,25 @@ router.post("/bigpayz_withdraw", auth, async (req, res) => {
                         console.log("/withdraw error", ex);
                     }
                 }
+
+								// write the code here if user have promotion code deleteProm then applied promotion will get deleted 
+								if (user && user?.promotionId) {
+									const userPromotionInfo = await Promotion.findById(user.promotionId)
+									let promotionPermissions = userPromotionInfo.permissions;
+									if(promotionPermissions.includes("deleteProm")) {
+										await User.updateOne(
+											{ "_id": req.user.id },  // Filter by user _id
+											{ $unset: { promotionId: 1 } }
+										);
+									} 
+
+								}
+								// end code 
+
                 res.send(response.data);
             });
     } catch (ex) {
-        console.log("Error Exception On Deposit", ex);
+        console.log("Error Exception On Deposit4444", ex);
     }
 });
 
@@ -1284,28 +1365,26 @@ router.post("/balance", auth, async (req, res) => {
             },
         ]);
     }
-console.log("trans result"+resultTrans.length);
+    console.log("trans result" + resultTrans.length);
     let totalBetAmount = 0;
     let totalTurnover = 0;
     console.log("bet total result.." + result);
-   // console.log("transaction amount..deposit.." + resultTrans[0].totalTransAmount);
+    // console.log("transaction amount..deposit.." + resultTrans[0].totalTransAmount);
 
-    if (result.length > 0 ) {
+    if (result.length > 0) {
         console.log("Total Bet Amount:", result[0].totalBetAmount);
         totalBetAmount = result[0].totalBetAmount;
-        if(resultTrans.length>0)
-        {
-        totalTurnover = resultTrans[0].totalTransAmount - result[0].totalBetAmount;
-        if(totalTurnover<0)
-        {
-            totalTurnover=0;
-        }
+        if (resultTrans.length > 0) {
+            totalTurnover = resultTrans[0].totalTransAmount - result[0].totalBetAmount;
+            if (totalTurnover < 0) {
+                totalTurnover = 0;
+            }
         }
     } else {
         console.log("No bets found or sum is zero");
     }
 
-    res.json({ balance, totalTurnover, totalBetAmount});
+    res.json({ balance, totalTurnover, totalBetAmount });
 });
 
 // playing balance
@@ -1376,29 +1455,29 @@ const getPhoneNumber = (txnUserId) => {
 // AWC HOOK FUNCTION
 router.post("/awc_hook", async (req, res) => {
     console.log("AWC CALLBACK awc_hook", req.body.message);
-   
+
     let req_val = JSON.parse(req.body.message);
     // "key": "SWGH308iLalAafVOdgDD",
     // "message": "{\"action\":\"getBalance\",\"userId\":\"swuserid\"}"
 
     // SAVE BET HISTORY
     if (req_val["action"] != "getBalance") {
-       // console.log("request.."+req_val["userId"]);
+        // console.log("request.."+req_val["userId"]);
         //const user = await User.findOne({
-           // phone: getPhoneNumber(req_val["userId"]),
-       // });
-       // console.log("user"+user.phone);
+        // phone: getPhoneNumber(req_val["userId"]),
+        // });
+        // console.log("user"+user.phone);
         // If the action is not getBalance, must save all bet history
-        req_val["txns"].map( async (txn, key) => {
-           //console.log("txn bets.."+txn.userId);
+        req_val["txns"].map(async (txn, key) => {
+            //console.log("txn bets.."+txn.userId);
             //console.log(req_val["txns"]);
             const user = await User.findOne({
-                 phone: getPhoneNumber(txn.userId),
-             });
-           console.log("platform.."+user.platform);
+                phone: getPhoneNumber(txn.userId),
+            });
+            console.log("platform.." + user.platform);
             const bet = new Bet(txn);
             bet.action = req_val["action"];
-           bet.agentId=user.platform;
+            bet.agentId = user.platform;
             bet.save()
                 .then((savedBet) => {
                     // Handle success, e.g., logging or sending a response

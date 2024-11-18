@@ -11,6 +11,8 @@ const User = require("../../models/User");
 const Promotion = require("../../models/Promotion");
 const moment = require('moment');
 
+const promotionAllPermissions = ["All","newcust","oldcust","topupBonus","forFirstDeposit","autoBonus","deleteProm","hideProm"];
+
 router.post("/", async (req, res) => {
 	const { promotion_id, user_id } = req.body;
 
@@ -21,6 +23,8 @@ router.post("/", async (req, res) => {
 			// get details user current promotion
 			const promotionInfo = await Promotion.findById(promotion_id)
 			const userPromotionInfo = await Promotion.findById(user.promotionId)
+
+			let promotionPermissions = promotionInfo.permissions;
 
 			// if user have aready promotion 
 			if (userPromotionInfo && userPromotionInfo?.expDate) {
@@ -47,9 +51,9 @@ router.post("/", async (req, res) => {
 				checkNewPlanExpire = expDateTimeStampNewPro >= currentDateTimeStamp
 
 
-
 				console.log("checkUserPlanExpire", checkUserPlanExpire);
 				console.log("checkNewPlanExpire", checkNewPlanExpire);
+
 				if (!checkUserPlanExpire && !checkNewPlanExpire) {
 					res.json({
 						status: 200, res: "warning", msg: "This Promotion Expired", data: {
@@ -85,11 +89,14 @@ router.post("/", async (req, res) => {
 						} else {
 							calculateDiscount = bonusAmnt;
 						}
-						if (userBalance >= depositAmnt) {
+						// console.log("check-->",promotionPermissions.includes("forFirstDeposit"));
+						if (userBalance >= depositAmnt || (promotionPermissions.includes("forFirstDeposit") || promotionPermissions.includes("autoBonus") || promotionPermissions.includes("deleteProm"))) {
 							userBalance = userBalance + calculateDiscount;
 							// Update the user's Promotion in the database
 							user.promotionId = promotion_id;
-							user.balance = userBalance;
+							if((!promotionPermissions.includes("forFirstDeposit") && !promotionPermissions.includes("autoBonus"))) {
+								user.balance = userBalance;
+							}
 							await user.save();
 							res.json({
 								status: 200, res: "sucess", msg: "That promotion applied successfully!", data: {
@@ -107,10 +114,7 @@ router.post("/", async (req, res) => {
 								}
 							});
 						}
-
-
 					}
-
 				}
 
 			} else {
@@ -125,11 +129,15 @@ router.post("/", async (req, res) => {
 				} else {
 					calculateDiscount = bonusAmnt;
 				}
-				if (userBalance >= depositAmnt) {
+				if (userBalance >= depositAmnt || (promotionPermissions.includes("forFirstDeposit") || promotionPermissions.includes("autoBonus") || promotionPermissions.includes("deleteProm"))) {
 					userBalance = userBalance + calculateDiscount;
 					// Update the user's Promotion in the database
 					user.promotionId = promotion_id;
-					user.balance = userBalance;
+					
+					if((!promotionPermissions.includes("forFirstDeposit") && !promotionPermissions.includes("autoBonus"))) {
+						user.balance = userBalance;
+					}
+					// user.balance = userBalance;
 					await user.save();
 					res.json({
 						status: 200, res: "sucess", msg: "That promotion applied successfully!", data: {
@@ -145,6 +153,10 @@ router.post("/", async (req, res) => {
 				}
 
 			}
+
+
+
+
 		}
 	} catch (err) {
 		console.error(err.message);
