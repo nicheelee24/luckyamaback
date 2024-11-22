@@ -9,6 +9,8 @@ const fs = require("fs");
 // const Agent = require("../../models/Agent");
 const User = require("../../models/User");
 const Promotion = require("../../models/Promotion");
+const Bonus = require("../../models/Bonus");
+const Bet = require("../../models/Bet");
 const moment = require('moment');
 
 const promotionAllPermissions = ["All","newcust","oldcust","topupBonus","forFirstDeposit","autoBonus","deleteProm","hideProm"];
@@ -95,6 +97,38 @@ router.post("/", async (req, res) => {
 							// Update the user's Promotion in the database
 							user.promotionId = promotion_id;
 							if((!promotionPermissions.includes("forFirstDeposit") && !promotionPermissions.includes("autoBonus"))) {
+								// add entry in the bonus table 
+								result = await Bet.aggregate([
+									{
+										$match: {
+											userId: user.name,
+											// action: { $in: ["bet", "betNSettle"] }, // Filters documents to include only those where action is either 'bet' or 'betNSettle'
+										},
+									},
+									{
+										$group: {
+											_id: null, // Grouping by null means aggregating all documents together
+											totalBetAmount: { $sum: "$turnover" }, // Sums up all betAmount values
+										},
+									},
+								]);
+								let totalBetAmount = 0;
+								if (result.length > 0) {
+									totalBetAmount = result[0].totalBetAmount;
+								}
+								let bonusEntity = new Bonus({
+									username:user.name,
+									userid: user._id,
+									promotionId: promotion_id,
+									bonusType: promotionInfo.bonusType,
+									quantity: 1,
+									topUp: calculateDiscount,
+									cashBalanceFirst: user.balance,
+									cashBalanceAfter: userBalance,
+									turnover:totalBetAmount - promotionInfo.depositAmnt
+								});
+								bonusEntity.save();
+								// end code 
 								user.balance = userBalance;
 							}
 							await user.save();
@@ -135,9 +169,41 @@ router.post("/", async (req, res) => {
 					user.promotionId = promotion_id;
 					
 					if((!promotionPermissions.includes("forFirstDeposit") && !promotionPermissions.includes("autoBonus"))) {
+						// add entry in the bonus table 
+						result = await Bet.aggregate([
+							{
+								$match: {
+									userId: user.name,
+									// action: { $in: ["bet", "betNSettle"] }, // Filters documents to include only those where action is either 'bet' or 'betNSettle'
+								},
+							},
+							{
+								$group: {
+									_id: null, // Grouping by null means aggregating all documents together
+									totalBetAmount: { $sum: "$turnover" }, // Sums up all betAmount values
+								},
+							},
+						]);
+						let totalBetAmount = 0;
+						if (result.length > 0) {
+							totalBetAmount = result[0].totalBetAmount;
+						}
+						let bonusEntity = new Bonus({
+							username:user.name,
+							userid: user._id,
+							promotionId: promotion_id,
+							bonusType: promotionInfo.bonusType,
+							quantity: 1,
+							topUp: calculateDiscount,
+							cashBalanceFirst: user.balance,
+							cashBalanceAfter: userBalance,
+							turnover:totalBetAmount - promotionInfo.depositAmnt
+						});
+						bonusEntity.save();
+						// end code 
 						user.balance = userBalance;
 					}
-					// user.balance = userBalance;
+					
 					await user.save();
 					res.json({
 						status: 200, res: "sucess", msg: "That promotion applied successfully!", data: {
