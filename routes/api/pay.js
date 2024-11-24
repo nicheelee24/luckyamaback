@@ -621,9 +621,8 @@ router.post("/deposit_bigpay", auth, async (req, res) => {
 					res.send({ error: "API Response Code", code: resp.error_code, msg: resp.error_message, PayUrl: "" });
 					
 					
-				} else {
-					console.log("Error calling bigpay deposit function");
-					if (resp.error_code == 209) {
+				} 
+					else if (resp.error_code == 209) {
 						res.send({ error: "API Response Code", code: resp.error_code, msg: resp.error_message, PayUrl: "" });
 					}
 					else if (resp.error_code == 0) {
@@ -807,7 +806,7 @@ router.post("/deposit_bigpay", auth, async (req, res) => {
 					}
 
 
-				}
+				
 			});
 	}
 	catch (ex) {
