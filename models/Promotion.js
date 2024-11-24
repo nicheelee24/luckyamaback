@@ -21,9 +21,9 @@ const promotionSchema = new mongoose.Schema({
         type: String,
     },
    
-    bonusType: {
-        type: String,
-    },
+    // bonusType: {
+    //     type: String,
+    // },
     percentBonus: {
         type: Number,
     },

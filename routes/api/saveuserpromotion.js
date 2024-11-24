@@ -192,7 +192,7 @@ router.post("/", async (req, res) => {
 							username:user.name,
 							userid: user._id,
 							promotionId: promotion_id,
-							bonusType: promotionInfo.bonusType,
+							//bonusType: promotionInfo.bonusType,
 							quantity: 1,
 							topUp: calculateDiscount,
 							cashBalanceFirst: user.balance,
