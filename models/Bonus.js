@@ -12,9 +12,9 @@ const bonusSchema = new mongoose.Schema({
 		ref: 'promotions',
 		required: false
 	},
-	bonusType: {
-		type: String,
-	},
+	// bonusType: {
+	// 	type: String,
+	// },
 	quantity: {
 		type: Number,
 		default: 0,
