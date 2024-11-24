@@ -613,69 +613,47 @@ router.post("/deposit_bigpay", auth, async (req, res) => {
 				const resp = resonse.data;
 				console.log(resp);
 
-				if (resp.error_code == 0) {
+				if (resp.error_code == 103) {
 					console.log(req.user.id);
 
-					try {
-						// let transaction = new Transaction({
-						//     userid: req.user.id,
-						//     clientCode: '',
-						//     payAmount: req.body.amount,
-						//     trxNo: resp.invoice_number,
-						//     token: resp.token,
-						//     status: 'initiated',
-						//     type: "deposit",
-						//     platform: 'bigpayz',
-						// });
-						// transaction.save();
+					
 
-						let transaction = new Transaction({
-							userid: req.user.id,
-							platform: 'luckyama',
-							userPhone: user.phone,
-							orderNo: ref_id,
-							payAmount: req.body.amount,
-							status: 'initiated',
-							responseCode: 0,
-							type: "deposit",
-							provider: 'bigpayz',
-							// trxNo: resp.invoice_number,
-						});
-						transaction.save();
-
-						User.findById(req.user.id)
-							.then((user) => {
-								user.balance =
-									Number(user.balance) +
-									Number(req.body.amount);
-								user.save();
-								console.log("user balance updated");
-							})
-							.catch((err) => {
-								console.log(
-									"/user balance update error user",
-									err
-								);
-							});
-					} catch (ex) {
-						console.log("/deposit error", ex);
-					}
-
-					//   res.send({ payUrl: resp.payUrl });
-
-
-
-					// res.json({ status: "0000"});
-
-					console.log("resulttt----->" + resp.redirect_to);
-					res.send({ PayUrl: resp.redirect_to, code: 0, gateway: 'bpay' });
+					res.send({ error: "API Response Code", code: resp.error_code, msg: resp.error_message, PayUrl: "" });
+					
+					
 				} else {
 					console.log("Error calling bigpay deposit function");
 					if (resp.error_code == 209) {
 						res.send({ error: "API Response Code", code: resp.error_code, msg: resp.error_message, PayUrl: "" });
 					}
-					else if (resp.error_code == 103) {
+					else if (resp.error_code == 0) {
 						// write the code for if user have promotion code then check the promotion accordingly add the bonous 
+						
+								
+							let transaction = new Transaction({
+								userid: req.user.id,
+								platform: 'luckyama',
+								userPhone: user.phone,
+								orderNo: ref_id,
+								payAmount: req.body.amount,
+								status: 'initiated',
+								responseCode: 0,
+								type: "deposit",
+								provider: 'bigpayz',
+								// trxNo: resp.invoice_number,
+							});
+							transaction.save();
+	
+							User.findById(req.user.id)
+								.then((user) => {
+									user.balance =
+										Number(user.balance) +
+										Number(req.body.amount);
+									user.save();
+									console.log("user balance updated");
+								})
+								
+
 						if (user && user?.promotionId) {
 							const userPromotionInfo = await Promotion.findById(user.promotionId)
 							let promotionPermissions = userPromotionInfo.permissions;
@@ -821,7 +799,8 @@ router.post("/deposit_bigpay", auth, async (req, res) => {
 						}
 
 						// end code 
-						res.send({ error: "API Response Code", code: resp.error_code, msg: resp.message, PayUrl: "" });
+						//res.send({ PayUrl: resp.redirect_to, code: 0, gateway: 'bpay' });
+						res.send({ error: "API Response Code", code: resp.error_code, msg: resp.message, PayUrl: resp.redirect_to,gateway: 'bpay' });
 					}
 					else {
 						res.send({ error: resp.error_message + "*", code: resp.error_code, PayUrl: "" });
