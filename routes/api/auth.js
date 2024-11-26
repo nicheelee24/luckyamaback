@@ -190,7 +190,7 @@ router.post(
             const promotionData = {};
            
             if (user?.promotionId) {
-                promotionData = user?.promotionId;
+               // promotionData = user?.promotionId;
             }
 
             res.json({ status: "0000", token, user_phn: user_phone, promotion_data: promotionData });

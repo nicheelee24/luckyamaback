@@ -21,6 +21,7 @@ router.post("/", async (req, res) => {
 	try {
 		// Get the user from the database
 		const user = await User.findById(user_id);
+		//console.log("save promotion user data...."+user);
 		if (promotion_id) {
 			// get details user current promotion
 			const promotionInfo = await Promotion.findById(promotion_id)
@@ -30,6 +31,8 @@ router.post("/", async (req, res) => {
 
 			// if user have aready promotion 
 			if (userPromotionInfo && userPromotionInfo?.expDate) {
+
+				console.log("user has active promotion...");
 				const expDateString = userPromotionInfo.expDate;
 				const [day, month, year] = expDateString.split('-');
 				const formattedDateString = `${year}-${month}-${day}`;
@@ -81,6 +84,7 @@ router.post("/", async (req, res) => {
 						});
 					}
 					else {
+						console.log("no promotion added yet.....");
 						let highestPercent = promotionInfo.highestPercent;
 						let bonusAmnt = promotionInfo.bonusAmnt;
 						let depositAmnt = promotionInfo.depositAmnt;
@@ -153,6 +157,7 @@ router.post("/", async (req, res) => {
 
 			} else {
 				// if user have no promotion 
+				console.log("no promotion added yet.....");
 				let highestPercent = promotionInfo.highestPercent;
 				let bonusAmnt = promotionInfo.bonusAmnt;
 				let depositAmnt = promotionInfo.depositAmnt;
@@ -167,8 +172,8 @@ router.post("/", async (req, res) => {
 					userBalance = userBalance + calculateDiscount;
 					// Update the user's Promotion in the database
 					user.promotionId = promotion_id;
+					console.log("promotion id added to user table.....");
 					
-					if((!promotionPermissions.includes("forFirstDeposit") && !promotionPermissions.includes("autoBonus"))) {
 						// add entry in the bonus table 
 						result = await Bet.aggregate([
 							{
@@ -200,9 +205,10 @@ router.post("/", async (req, res) => {
 							turnover:totalBetAmount - promotionInfo.depositAmnt
 						});
 						bonusEntity.save();
+						console.log("bonus data saved..");
 						// end code 
 						user.balance = userBalance;
-					}
+					
 					
 					await user.save();
 					res.json({
