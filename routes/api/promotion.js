@@ -23,14 +23,16 @@ router.get("/getpromotions", async (req, res) => {
                                 dateString: {
                                     $concat: [
                                         { $substr: ["$expDate", 6, 4] }, "-", // Extract and format year
-                                        { $substr: ["$expDate", 3, 2] }, "-", // Extract and format month
-                                        { $substr: ["$expDate", 0, 2] }      // Extract and format day
+                                        { $substr: ["$expDate", 0, 2] }, "-", // Extract and format month
+                                        { $substr: ["$expDate", 3, 2] } 
                                     ]
                                 },
-                                format: "%Y-%m-%d"
+                                format: "%Y-%m-%d",
+                                onError: null,
+                                onNull: null
                             }
                         },
-                        {
+                        {   
                             $dateFromString: {
                                 dateString: {
                                     $dateToString: { format: "%Y-%m-%d", date: new Date() }
