@@ -1007,7 +1007,7 @@ router.post("/bigpayz_withdraw", auth, async (req, res) => {
 			console.log("No bets found or sum is zero");
 		}
 
-		if (totalBetAmount>0) {
+		if (amount >totalBetAmount) {
 			 res.send({
 			   code:-3,
 			 success: false,
