@@ -1094,11 +1094,11 @@ router.post("/bigpayz_withdraw", auth, async (req, res) => {
 							userid: req.user.id,
 							clientCode: process.env.CLIENT_CODE,
 							payAmount: requestAmount,
-							trxNo: orderNo,
+							trxNo: response.data.invoice_number,
 							sign: sign,
-							status: status,
+							status: 'success',
 							type: "withdraw",
-							platform: platform,
+							platform: 'BigPayz',
 						});
 						transaction.save();
 
