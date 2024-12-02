@@ -909,7 +909,7 @@ router.post("/bigpayz_withdraw", auth, async (req, res) => {
 
 		if (Number(user.balance) < Number(amount)) {
 			res.send({
-				code: '-2',
+				code: '-5',
 				success: false,
 				message: "Not Enough Balance!",
 			});
@@ -959,7 +959,7 @@ router.post("/bigpayz_withdraw", auth, async (req, res) => {
 					}
 					if(actualBetSpentAmountAfterProApplied < shouldSpentonBet) {
 						res.send({
-							code: '-2',
+							code: '-4',
 							success: false,
 							message: "You are not eligible to withdraw the amount!",
 						});
@@ -1007,14 +1007,14 @@ router.post("/bigpayz_withdraw", auth, async (req, res) => {
 			console.log("No bets found or sum is zero");
 		}
 
-		if (amount > totalBetAmount) {
-			// res.send({
-			//   code:0,
-			// success: false,
-			// message: "Not Enough Turnover!",
-			// });
+		if (totalBetAmount>0) {
+			 res.send({
+			   code:-3,
+			 success: false,
+			 message: "Not Enough Turnover!",
+			 });
 
-			//  return;
+			  return;
 		}
 		// End Check turnover
 
@@ -1024,7 +1024,7 @@ router.post("/bigpayz_withdraw", auth, async (req, res) => {
 		const player_ip = "82.112.236.107";
 		const currency_code = "THB";
 
-		const bank_code = "KSKB";
+		const bank_code = user.bbn;
 		const beneficiary_account = user.bban;
 		const beneficiary_name = user.bbun;
 		const ifsc = "";
@@ -1073,19 +1073,12 @@ router.post("/bigpayz_withdraw", auth, async (req, res) => {
 				}
 			)
 			.then(async function (response) {
-				console.log("bigpay response...11111");
+				console.log("bigpay response...");
 				console.log(response.data);
-				if (response.data.error_code == 203) {
+				
+				if (response.data.error_code == 401) {
 					res.send({
-						code: '203',
-						success: false,
-						message: response.data.message,
-
-					});
-				}
-				else if (response.data.error_code == 401) {
-					res.send({
-						code: '401',
+						code: 401,
 						success: false,
 						message: response.data.message,
 
@@ -1094,24 +1087,13 @@ router.post("/bigpayz_withdraw", auth, async (req, res) => {
 				else if(response.data.error_code == 408)
 				{
 					res.send({
-						code: '408',
+						code: 408,
 						success: false,
 						message: response.data.message,
 
 					});
 				}
-				/*
-				{
-						success: true,
-						httpCode: 200,
-						data: {
-						orderNo: 'PYXLMVI0000042',
-						requestAmount: 100,
-						status: 'PAYING',
-						sign: '02443457e4fae3201168a7f03359adc8'
-						}
-				}
-				*/
+				
 				else if (response.data.error_code == 0) {
 					const { orderNo, requestAmount, status, sign } =
 						response.data
@@ -1144,6 +1126,12 @@ router.post("/bigpayz_withdraw", auth, async (req, res) => {
 					} catch (ex) {
 						console.log("/withdraw error", ex);
 					}
+					res.send({
+						code: 0,
+						success: true,
+						message: response.data.message,
+
+					});
 				}
 
 				// write the code here if user have promotion code deleteProm then applied promotion will get deleted 
