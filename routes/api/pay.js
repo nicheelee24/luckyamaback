@@ -1076,25 +1076,17 @@ router.post("/bigpayz_withdraw", auth, async (req, res) => {
 				console.log("bigpay response...");
 				console.log(response.data);
 				
-				if (response.data.error_code == 401) {
+				if (response.data.error_code !=0) {
 					res.send({
-						code: 401,
-						success: false,
-						message: response.data.message,
-
-					});
-				}
-				else if(response.data.error_code == 408)
-				{
-					res.send({
-						code: 408,
+						code: response.data.error_code,
 						success: false,
 						message: response.data.message,
 
 					});
 				}
 				
-				else if (response.data.error_code == 0) {
+				
+				else {
 					const { orderNo, requestAmount, status, sign } =
 						response.data
 					try {
