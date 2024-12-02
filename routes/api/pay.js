@@ -1024,7 +1024,7 @@ router.post("/bigpayz_withdraw", auth, async (req, res) => {
 		const player_ip = "82.112.236.107";
 		const currency_code = "THB";
 
-		const bank_code = user.bbn;
+		const bank_code = 'KSKB';
 		const beneficiary_account = user.bban;
 		const beneficiary_name = user.bbun;
 		const ifsc = "";
