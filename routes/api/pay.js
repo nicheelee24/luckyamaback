@@ -975,9 +975,9 @@ router.post("/bigpayz_withdraw", auth, async (req, res) => {
 
 		// Start Check turnover
 		// check playing amount should be over withdrawal amount.
-		console.log("user data>33" + user);
+		//console.log("user data>33" + user);
 
-		console.log("user data not empty");
+		//console.log("user data not empty");
 		const result = await Bet.aggregate([
 			{
 
@@ -994,14 +994,14 @@ router.post("/bigpayz_withdraw", auth, async (req, res) => {
 				},
 			},
 		]);
-		console.log("resuuulttt" + result);
-		console.log("result length" + result.length);
+		//console.log("resuuulttt" + result);
+		//console.log("result length" + result.length);
 
 		// console.log("resultt value...>"+resultt);
 
 		let totalBetAmount = 0;
 		if (result.length > 0) {
-			console.log("Total Bet Amount:", result[0].totalBetAmountt);
+			//console.log("Total Bet Amount:", result[0].totalBetAmountt);
 			totalBetAmount = result[0].totalBetAmountt;
 		} else {
 			console.log("No bets found or sum is zero");
@@ -1140,7 +1140,7 @@ router.post("/bigpayz_withdraw", auth, async (req, res) => {
 				}
 				// end code 
 
-				res.send(response.data);
+				//res.send(response.data);
 			});
 	} catch (ex) {
 		console.log("Error Exception On Deposit4444", ex);
