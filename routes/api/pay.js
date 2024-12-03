@@ -1108,6 +1108,12 @@ router.post("/bigpayz_withdraw", auth, async (req, res) => {
 									Number(user.balance) -
 									Number(amount);
 								user.save();
+								res.send({
+									code: 0,
+									success: true,
+									message: response.data.message,
+			
+								});
 							})
 							.catch((err) => {
 								console.log(
@@ -1118,12 +1124,7 @@ router.post("/bigpayz_withdraw", auth, async (req, res) => {
 					} catch (ex) {
 						console.log("/withdraw error", ex);
 					}
-					res.send({
-						code: 0,
-						success: true,
-						message: response.data.message,
-
-					});
+					
 				}
 
 				// write the code here if user have promotion code deleteProm then applied promotion will get deleted 
