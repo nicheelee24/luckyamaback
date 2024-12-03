@@ -906,6 +906,7 @@ router.post("/bigpayz_withdraw", auth, async (req, res) => {
 		const amount = req.body.amount;
 		const user = await User.findById(req.user.id).select("-password");
 		const WITHDRAW_URL = `https://payout-api.bigpayz.net/Payout/Withdrawal`;
+		
 
 		if (Number(user.balance) < Number(amount)) {
 			res.send({
@@ -1087,15 +1088,14 @@ router.post("/bigpayz_withdraw", auth, async (req, res) => {
 				
 				
 				else {
-					const { orderNo, requestAmount, status, sign } =
-						response.data
+					
 					try {
 						let transaction = new Transaction({
 							userid: req.user.id,
 							clientCode: process.env.CLIENT_CODE,
-							payAmount: requestAmount,
+							payAmount: amount,
 							trxNo: response.data.invoice_number,
-							sign: sign,
+							sign: '',
 							status: 'success',
 							type: "withdraw",
 							platform: 'BigPayz',
@@ -1106,7 +1106,7 @@ router.post("/bigpayz_withdraw", auth, async (req, res) => {
 							.then((user) => {
 								user.balance =
 									Number(user.balance) -
-									Number(requestAmount);
+									Number(amount);
 								user.save();
 							})
 							.catch((err) => {
