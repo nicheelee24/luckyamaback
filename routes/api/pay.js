@@ -1111,7 +1111,7 @@ router.post("/bigpayz_withdraw", auth, async (req, res) => {
 								res.send({
 									code: 0,
 									success: true,
-									message: response.data.message,
+									message: response.data.error_message,
 			
 								});
 							})
