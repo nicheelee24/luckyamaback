@@ -13,10 +13,12 @@ const Bet = require("../../models/Bet");
 
 router.get("/mybets",auth, async (req, res) => {
     try {
+        const user = await User.findById(req.user.id).select("-password");
         let myBets = await Bet.find({
-            userId: "am0000002",
+            userId: user.name,
            
-        }).limit(2);
+        });
+        console.log("my bets data...."+myBets);
         res.json({ status: "0000", myBets });
     } catch (err) {
         console.error(err.message);
