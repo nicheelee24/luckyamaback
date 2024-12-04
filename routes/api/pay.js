@@ -1077,7 +1077,7 @@ router.post("/bigpayz_withdraw", auth, async (req, res) => {
 				console.log("bigpay response...");
 				console.log(response.data);
 				
-				if (response.data.error_code !=0) {
+				if (response.data.error_code ==0) {
 					res.send({
 						code: response.data.error_code,
 						success: false,
@@ -1099,6 +1099,7 @@ router.post("/bigpayz_withdraw", auth, async (req, res) => {
 							status: 'success',
 							type: "withdrawal",
 							platform: 'luckyama',
+							userPhone:user.userPhone
 						});
 						transaction.save();
 
