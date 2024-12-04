@@ -1109,7 +1109,7 @@ router.post("/bigpayz_withdraw", auth, async (req, res) => {
 									status: 'success',
 									type: "withdrawal",
 									platform: 'luckyama',
-									userPhone:user.userPhone
+									userPhone:user.phone
 								});
 								transaction.save();
 								res.send({
