@@ -1090,19 +1090,8 @@ router.post("/bigpayz_withdraw", auth, async (req, res) => {
 				else {
 					
 					try {
-						const userr = await User.findById(req.user.id);
-						let transaction = new Transaction({
-							userid: req.user.id,
-							clientCode: process.env.CLIENT_CODE,
-							payAmount: amount,
-							trxNo: response.data.invoice_number,
-							sign: '',
-							status: 'success',
-							type: "withdrawal",
-							platform: 'luckyama',
-							userPhone:userr.userPhone
-						});
-						transaction.save();
+						
+						
 
 						User.findById(req.user.id)
 							.then((user) => {
@@ -1110,6 +1099,19 @@ router.post("/bigpayz_withdraw", auth, async (req, res) => {
 									Number(user.balance) -
 									Number(amount);
 								user.save();
+
+								let transaction = new Transaction({
+									userid: user.id,
+									clientCode: process.env.CLIENT_CODE,
+									payAmount: amount,
+									trxNo: response.data.invoice_number,
+									sign: '',
+									status: 'success',
+									type: "withdrawal",
+									platform: 'luckyama',
+									userPhone:user.userPhone
+								});
+								transaction.save();
 								res.send({
 									code: 0,
 									success: true,
