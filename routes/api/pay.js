@@ -1097,7 +1097,7 @@ router.post("/bigpayz_withdraw", auth, async (req, res) => {
 							trxNo: response.data.invoice_number,
 							sign: '',
 							status: 'success',
-							type: "withdraw",
+							type: "withdrawal",
 							platform: 'luckyama',
 						});
 						transaction.save();
