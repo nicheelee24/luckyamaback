@@ -521,7 +521,7 @@ router.post("/balance_bigpay", async (req, res) => {
 })
 
 
-router.post("/deposit_bigpay", async (req, res) => {
+router.post("/deposit_bigpay", auth, async (req, res) => {
 	try {
 
 		//console.log(req.body);
