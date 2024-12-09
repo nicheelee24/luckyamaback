@@ -11,15 +11,16 @@ const Transaction = require("../../models/Transaction");
 const User = require("../../models/User");
 const Bet = require("../../models/Bet");
 
-router.get("/mybets",auth, async (req, res) => {
+router.get("/mybets", auth, async (req, res) => {
     try {
-        const user = await User.findById(req.user.id).select("-password");
-        let myBets = await Bet.find({
-            userId: user.name,
+       // const user = await User.findById(req.user.id).select("-password");
+        let myBets=[];
+        myBets = await Bet.find({
+            userId: "am00993949263",
            
-        });
-        console.log("my bets data...."+myBets);
-        res.json({ status: "0000", myBets });
+        }).sort({date:-1});
+        console.log("my bets dataaaa....backend log"+myBets);
+        res.json({ status: "0000",myBets });
     } catch (err) {
         console.error(err.message);
         res.status(500).send("Server Error");

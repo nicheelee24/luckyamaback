@@ -48,7 +48,7 @@ router.get("/getpromotions", async (req, res) => {
                 agentname: "luckyama",
             }).limit(50);
         }
-        console.log("data....." + promotionsList)
+       // console.log("data....." + promotionsList)
         res.json({ status: "0000", promotionsList });
     } catch (err) {
         console.error(err.message);
