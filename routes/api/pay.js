@@ -521,12 +521,13 @@ router.post("/balance_bigpay", async (req, res) => {
 })
 
 
-router.post("/deposit_bigpay", async (req, res) => {
+router.post("/deposit_bigpay",auth, async (req, res) => {
 	try {
 
 		//console.log(req.body);
 		console.log("bigpay bank deposit function called..");
 		const user = await User.findById(req.user.id).select("-password");
+		
 		//console.log(user.name);
 
 		//--BIGPAY BANK METHOD PARAMS
