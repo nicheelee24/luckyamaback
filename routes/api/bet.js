@@ -13,13 +13,14 @@ const Bet = require("../../models/Bet");
 
 router.get("/mybets", auth, async (req, res) => {
     try {
-       // const user = await User.findById(req.user.id).select("-password");
+        const user = await User.findById(req.user.id);
+        console.log("userrrrrrr data"+user.name);
         let myBets=[];
         myBets = await Bet.find({
-            userId: "am00993949263",
+            userId: user.name,
            
         }).sort({date:-1});
-        console.log("my bets dataaaa....backend log"+myBets);
+       // console.log("my bets dataaaa....backend log"+myBets);
         res.json({ status: "0000",myBets });
     } catch (err) {
         console.error(err.message);

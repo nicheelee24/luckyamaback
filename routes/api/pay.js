@@ -614,19 +614,9 @@ router.post("/deposit_bigpay",auth, async (req, res) => {
 				const resp = resonse.data;
 				console.log(resp);
 
-				if (resp.error_code == 103) {
-					console.log(req.user.id);
-
+				
 					
-
-					res.send({ error: "API Response Code", code: resp.error_code, msg: resp.error_message, PayUrl: "" });
-					
-					
-				} 
-					else if (resp.error_code == 209) {
-						res.send({ error: "API Response Code", code: resp.error_code, msg: resp.error_message, PayUrl: "" });
-					}
-					else if (resp.error_code == 0) {
+					if (resp.error_code == 0) {
 						// write the code for if user have promotion code then check the promotion accordingly add the bonous 
 						
 								
@@ -803,7 +793,8 @@ router.post("/deposit_bigpay",auth, async (req, res) => {
 						res.send({ error: "API Response Code", code: resp.error_code, msg: resp.message, PayUrl: resp.redirect_to,gateway: 'bpay' });
 					}
 					else {
-						res.send({ error: resp.error_message + "*", code: resp.error_code, PayUrl: "" });
+						
+						res.send({ error: resp.error_message + "*", code: resp.error_code,msg: resp.message, PayUrl: "" });
 					}
 
 
