@@ -160,12 +160,18 @@ router.post(
         const { phone, password } = req.body;
 
         try {
-            let user = await User.findOne({ phone }).populate('promotionId');
+            let user = await User.findOne({ phone}).populate('promotionId');
 
             if (!user) {
                 return res
                     .status(400)
                     .json({ errors: [{ msg: "Invalid Credentials1" }] });
+            }
+            if(user.status!='Active')
+            {
+                return res
+                    .status(300)
+                    .json({ errors: [{ msg: "Your Account is blocked." }] });
             }
 
            
