@@ -171,7 +171,7 @@ router.post(
 
            
             const isMatch = await bcrypt.compare(password, user.password);
-            console.log(password, user.password);
+           // console.log(password, user.password);
             if (!isMatch) {
                 return res
                     .status(400)
@@ -197,7 +197,7 @@ router.post(
             if(user.status!='Active')
                 {
                    
-                        res.json({ status: "300" });
+                        res.json({ status: "300",msg: "This account has been Restricted. Please contact support." });
                 }
                 else
                 {
