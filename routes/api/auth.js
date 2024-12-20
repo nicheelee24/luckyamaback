@@ -163,9 +163,7 @@ router.post(
             let user = await User.findOne({ phone}).populate('promotionId');
 
             if (!user) {
-                return res
-                    .status(400)
-                    .json({ errors: [{ msg: "Invalid Credentials1" }] });
+                res.json({ status: "302",msg: "Account not found." });
             }
            
 
@@ -173,9 +171,7 @@ router.post(
             const isMatch = await bcrypt.compare(password, user.password);
            // console.log(password, user.password);
             if (!isMatch) {
-                return res
-                    .status(400)
-                    .json({ errors: [{ msg: "Invalid Credentials2" }] });
+                res.json({ status: "301",msg: "Invalid Credentails" });
             }
             const payload = {
                 user: {
