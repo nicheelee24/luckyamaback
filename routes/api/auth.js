@@ -167,12 +167,7 @@ router.post(
                     .status(400)
                     .json({ errors: [{ msg: "Invalid Credentials1" }] });
             }
-            if(user.status!='Active')
-            {
-                return res
-                    .status(300)
-                    .json({ errors: [{ msg: "Your Account is blocked." }] });
-            }
+           
 
            
             const isMatch = await bcrypt.compare(password, user.password);
@@ -199,7 +194,17 @@ router.post(
                // promotionData = user?.promotionId;
             }
 
-            res.json({ status: "0000", token, user_phn: user_phone, promotion_data: promotionData });
+            if(user.status!='Active')
+                {
+                   
+                        res.json({ status: "300" });
+                }
+                else
+                {
+                    res.json({ status: "0000", token, user_phn: user_phone, promotion_data: promotionData });
+                }
+
+           
             //res.json({ status: "0000", msg: "Login successfully!" });
 
             // user.platform
