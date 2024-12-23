@@ -1468,7 +1468,7 @@ router.post("/balance", auth, async (req, res) => {
 	}
 	console.log("trans result" + resultTrans.length);
 	let totalBetAmount = 0;
-	let totalTurnover = resultTrans[0].totalTransAmount;
+	let totalTurnover = 0;
 	console.log("bet total result.." + result);
 	// console.log("transaction amount..deposit.." + resultTrans[0].totalTransAmount);
 
