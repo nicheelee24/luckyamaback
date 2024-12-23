@@ -1484,6 +1484,9 @@ router.post("/balance", auth, async (req, res) => {
 	} else {
 		console.log("No bets found or sum is zero");
 	}
+	user.turnoverAmt=totalTurnover;
+	user.turnovers=1;
+	user.save();
 
 	res.json({ balance, totalTurnover, totalBetAmount });
 });

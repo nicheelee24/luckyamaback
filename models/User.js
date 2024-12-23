@@ -55,5 +55,13 @@ const userSchema = new mongoose.Schema({
         ref: 'promotions',
         required: false
     },
+    turnovers: {
+        type: Number,
+        default: 0,
+    },
+    turnoverAmt: {
+        type: Number,
+        default: 0,
+    },
 });
 module.exports = mongoose.model("users", userSchema);
