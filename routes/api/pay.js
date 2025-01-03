@@ -622,7 +622,7 @@ router.post("/deposit_bigpay_bank",auth, async (req, res) => {
 								userid: req.user.id,
 								platform: 'luckyama',
 								userPhone: user.phone,
-								orderNo: ref_id,
+								orderNo: ItemID,
 								payAmount: req.body[0],
 								status: 'initiated',
 								responseCode: 0,
