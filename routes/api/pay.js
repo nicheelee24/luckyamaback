@@ -528,7 +528,7 @@ router.post("/deposit_bigpay_bank",auth, async (req, res) => {
 		const user = await User.findById(req.user.id).select("-password");
 		
 		console.log(user.name);
-		console.log(req.params);		//--BIGPAY BANK METHOD PARAMS
+		console.log(req.params[1]);		//--BIGPAY BANK METHOD PARAMS
 
 		const MerchantCode = process.env.MerchantCode;
 		const ReturnURL = "https://ama777.cloud";
