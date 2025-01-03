@@ -913,7 +913,7 @@ router.post("/deposit_bigpay_qr",auth, async (req, res) => {
 								status: 'initiated',
 								responseCode: 0,
 								type: "deposit",
-								provider: 'bigpayz',
+								provider: 'bigpayz-qr',
 								// trxNo: resp.invoice_number,
 							});
 							transaction.save();
@@ -1074,11 +1074,11 @@ router.post("/deposit_bigpay_qr",auth, async (req, res) => {
 
 						// end code 
 						//res.send({ PayUrl: resp.redirect_to, code: 0, gateway: 'bpay' });
-						res.send({ error: "API Response Code", code: resp.error_code, msg: resp.error_message, PayUrl: resp.redirect_to,gateway: 'bpay' });
+						res.send({ error: "API Response Code", code: resp.error_code, msg: resp.message, PayUrl: resp.redirect_to,gateway: 'bpay' });
 					}
 					else {
 						
-						res.send({ error: resp.error_message + "*", code: resp.error_code,msg: resp.message, PayUrl: "" });
+						res.send({ error: resp.error_message + "*", code: resp.error_code,msg: resp.error_message, PayUrl: "" });
 					}
 
 
