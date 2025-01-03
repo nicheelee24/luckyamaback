@@ -534,14 +534,14 @@ router.post("/deposit_bigpay_bank",auth, async (req, res) => {
 		const ReturnURL = "https://ama777.cloud";
 		const FailedReturnURL = "https://ama777.cloud";
 		const HTTPPostURL = "https://ama777.cloud";
-		const Amount = "50.00";
+		const Amount = "200.00";
 		const Currency = "THB";
 		const ItemID = require('crypto').randomBytes(6).toString('hex');
 		const ItemDescription = "bank payment";
 		const PlayerId = user.phone.toString();
 		//const DEPOSIT_URL = `https://payin-api.bigpayz.net/payin/depositv2`;
 		//const HASH = MerchantCode + ItemID + Currency + Amount;
-		const BankCode = "KSKB";
+		const BankCode = "BKKB";//kskb
 
 		//-- BIGPAY QR CODE METHOD PARAMS
 
