@@ -534,14 +534,14 @@ router.post("/deposit_bigpay_bank",auth, async (req, res) => {
 		const ReturnURL = "https://ama777.cloud";
 		const FailedReturnURL = "https://ama777.cloud";
 		const HTTPPostURL = "https://ama777.cloud";
-		const Amount = "200.00";
+		const Amount =req.body[0];
 		const Currency = "THB";
 		const ItemID = require('crypto').randomBytes(6).toString('hex');
 		const ItemDescription = "bank payment";
 		const PlayerId = user.phone.toString();
 		//const DEPOSIT_URL = `https://payin-api.bigpayz.net/payin/depositv2`;
 		//const HASH = MerchantCode + ItemID + Currency + Amount;
-		const BankCode = "BKKB";//kskb
+		const BankCode = req.body[1];//kskb
 
 		//-- BIGPAY QR CODE METHOD PARAMS
 
@@ -614,7 +614,7 @@ router.post("/deposit_bigpay_bank",auth, async (req, res) => {
 
 				
 					
-					if (resp.error_code == 0) {
+					if (resp.status == 0) {
 						// write the code for if user have promotion code then check the promotion accordingly add the bonous 
 						
 								
@@ -623,11 +623,11 @@ router.post("/deposit_bigpay_bank",auth, async (req, res) => {
 								platform: 'luckyama',
 								userPhone: user.phone,
 								orderNo: ref_id,
-								payAmount: req.body.amount,
+								payAmount: req.body[0],
 								status: 'initiated',
 								responseCode: 0,
 								type: "deposit",
-								provider: 'bigpayz',
+								provider: 'bigpayz-bank-'+req.body[1],
 								// trxNo: resp.invoice_number,
 							});
 							transaction.save();
@@ -636,9 +636,9 @@ router.post("/deposit_bigpay_bank",auth, async (req, res) => {
 								.then((user) => {
 									user.balance =
 										Number(user.balance) +
-										Number(req.body.amount);
+										Number(req.body[0]);
 									user.save();
-									console.log("user balance updated");
+									console.log("user balance updated after BANK deposit");
 								})
 								
 
@@ -667,11 +667,11 @@ router.post("/deposit_bigpay_bank",auth, async (req, res) => {
 									let highestPercent = userPromotionInfo.highestPercent;
 									let bonusAmnt = userPromotionInfo.bonusAmnt;
 									let depositAmnt = userPromotionInfo.depositAmnt;
-									let userDepositeAmount = req.body.amount;
+									let userDepositeAmount = req.body[0];
 									let userBalance = user.balance;
 									let calculateDiscount = 0;
 									if (highestPercent && highestPercent > 0) {
-										calculateDiscount = req.body.amount * bonusAmnt / 100;
+										calculateDiscount = req.body[0] * bonusAmnt / 100;
 									} else {
 										calculateDiscount = bonusAmnt;
 									}
@@ -788,7 +788,7 @@ router.post("/deposit_bigpay_bank",auth, async (req, res) => {
 
 						// end code 
 						//res.send({ PayUrl: resp.redirect_to, code: 0, gateway: 'bpay' });
-						res.send({ error: "API Response Code", code: resp.error_code, msg: resp.message, PayUrl: resp.redirect_to,gateway: 'bpay' });
+						res.send({ error: "API Response Code", code: resp.status, msg: 'Something went wrong.', PayUrl: resp.redirect_to,gateway: 'bpayz-bank' });
 					}
 					else {
 						
@@ -836,7 +836,7 @@ router.post("/deposit_bigpay_qr",auth, async (req, res) => {
 		const player_username = user.phone.toString();
 		const player_ip = process.env.PLAYER_IP;
 		const currency_code = process.env.Currency;
-		const amount = req.body.amount;
+		const amount = req.body[0];
 		const lang = process.env.LANGUAGE;
 		const client_url = process.env.CLient_url;
 		const view = process.env.VIEW;
@@ -909,7 +909,7 @@ router.post("/deposit_bigpay_qr",auth, async (req, res) => {
 								platform: 'luckyama',
 								userPhone: user.phone,
 								orderNo: ref_id,
-								payAmount: req.body.amount,
+								payAmount: req.body[0],
 								status: 'initiated',
 								responseCode: 0,
 								type: "deposit",
@@ -922,7 +922,7 @@ router.post("/deposit_bigpay_qr",auth, async (req, res) => {
 								.then((user) => {
 									user.balance =
 										Number(user.balance) +
-										Number(req.body.amount);
+										Number(req.body[0]);
 									user.save();
 									console.log("user balance updated");
 								})
@@ -953,11 +953,11 @@ router.post("/deposit_bigpay_qr",auth, async (req, res) => {
 									let highestPercent = userPromotionInfo.highestPercent;
 									let bonusAmnt = userPromotionInfo.bonusAmnt;
 									let depositAmnt = userPromotionInfo.depositAmnt;
-									let userDepositeAmount = req.body.amount;
+									let userDepositeAmount = req.body[0];
 									let userBalance = user.balance;
 									let calculateDiscount = 0;
 									if (highestPercent && highestPercent > 0) {
-										calculateDiscount = req.body.amount * bonusAmnt / 100;
+										calculateDiscount = req.body[0] * bonusAmnt / 100;
 									} else {
 										calculateDiscount = bonusAmnt;
 									}
