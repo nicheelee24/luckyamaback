@@ -788,7 +788,7 @@ router.post("/deposit_bigpay_bank",auth, async (req, res) => {
 
 						// end code 
 						//res.send({ PayUrl: resp.redirect_to, code: 0, gateway: 'bpay' });
-						res.send({ error: "API Response Code", code: resp.status, msg: 'Something went wrong.', PayUrl: resp.redirect_to,gateway: 'bpayz-bank' });
+						res.send({ error: "API Response Code", code: resp.status, msg: 'Something went wrong.', PayUrl: resp.redirect_to,gateway: 'bpayz-bank',method:'bank' });
 					}
 					else {
 						
@@ -1074,7 +1074,7 @@ router.post("/deposit_bigpay_qr",auth, async (req, res) => {
 
 						// end code 
 						//res.send({ PayUrl: resp.redirect_to, code: 0, gateway: 'bpay' });
-						res.send({ error: "API Response Code", code: resp.error_code, msg: resp.message, PayUrl: resp.redirect_to,gateway: 'bpay' });
+						res.send({ error: "API Response Code", code: resp.error_code, msg: resp.message, PayUrl: resp.redirect_to,gateway: 'bpay',method:'qr' });
 					}
 					else {
 						
