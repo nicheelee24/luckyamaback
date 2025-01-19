@@ -149,12 +149,12 @@ router.post("/smartpay", auth, async (req, res) => {
 							}
 						)
 
-						.then(function (resonse) {
+						.then(function (resonsee) {
 							// console.log("smartpay apiiii response..." + resonse.data);
 							
-							const resp = resonse.data;
-							console.log(resp);
-							//console.log(resp['detail'].PayURL);
+							const respp = resonsee.data;
+							console.log(respp);
+							console.log(resp['detail'].PayURL);
 
 							let transaction = new Transaction({
 								userid: req.user.id,
