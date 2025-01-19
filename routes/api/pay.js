@@ -119,16 +119,16 @@ router.post("/smartpay", auth, async (req, res) => {
 			.then(function (resonse) {
 				// console.log("response..." + resonse.data);
 				const resp = resonse.data;
-				console.log("deposit response...." + resp.code);
-				console.log(resp.msg);
+				//console.log("deposit response...." + resp.code);
+				//console.log(resp.msg);
 				if (resp.code != -1) {
 					console.log(resp['detail'].PayURL);
-					res.send({ PayUrl: resp['detail'].PayURL, code: 0, gateway: 'spay' });
+					//res.send({ PayUrl: resp['detail'].PayURL, code: 0, gateway: 'spay' });
 					const dataToSignQuery = `date=${todayDateTime}&merchantNo=${merchantNo}&orderNo=${orderNo}&signType=${signType}&version=${version}${hashKey}`;
-					console.log(dataToSignQuery);
+				//	console.log(dataToSignQuery);
 
 					const signQuery = generateMD5(dataToSignQuery);
-					console.log(signQuery);
+					//console.log(signQuery);
 					endpoint = "/api/defray/queryV2";
 					axios
 						.post(
@@ -150,7 +150,7 @@ router.post("/smartpay", auth, async (req, res) => {
 						)
 
 						.then(function (resonse) {
-							// console.log("response..." + resonse.data);
+							 console.log("smartpay apiiii response..." + resonse.data);
 							const resp = resonse.data;
 							console.log(resp.status);
 
@@ -167,7 +167,7 @@ router.post("/smartpay", auth, async (req, res) => {
 								provider: 'smartpay',
 							});
 							transaction.save();
-							console.log("Smart pay bank api response success..");
+							console.log("transaction data saved...");
 						})
 				}
 				else {
