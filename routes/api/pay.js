@@ -122,7 +122,7 @@ router.post("/smartpay", auth, async (req, res) => {
 				//console.log("deposit response...." + resp.code);
 				//console.log(resp.msg);
 				if (resp.code != -1) {
-					console.log(resp['detail'].PayURL);
+					//console.log(resp['detail'].PayURL);
 					//res.send({ PayUrl: resp['detail'].PayURL, code: 0, gateway: 'spay' });
 					const dataToSignQuery = `date=${todayDateTime}&merchantNo=${merchantNo}&orderNo=${orderNo}&signType=${signType}&version=${version}${hashKey}`;
 				//	console.log(dataToSignQuery);
@@ -151,6 +151,7 @@ router.post("/smartpay", auth, async (req, res) => {
 
 						.then(function (resonse) {
 							 console.log("smartpay apiiii response..." + resonse.data);
+							 console.log(resp['detail'].PayURL);
 							const resp = resonse.data;
 							console.log(resp.status);
 
