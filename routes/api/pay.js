@@ -415,7 +415,7 @@ router.post("/smartpay_withdraw", auth, async (req, res) => {
 						platform: user.platform,
 						userPhone: user.phone,
 						orderNo: orderNo,
-						payAmount: req.body.amount,
+						payAmount: req.body[0],
 						status: resp.msg,
 						responseCode: resp.code,
 						action: 'initiated',
