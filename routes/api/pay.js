@@ -311,24 +311,26 @@ router.post("/smartpay_balance", async (req, res) => {
 	}
 });
 
-router.post("/smartpay_withdraw/:chanlType", auth, async (req, res) => {
+router.post("/smartpay_withdraw", auth, async (req, res) => {
+	const chnlType = req.body[1];
+	console.log(chnlType);
 	const user = await User.findById(req.user.id).select("-password");
-	const chnlType = req.params.chanlType;
-	const bankCode = "T_KBANK";
-	let accName = "Jirawat Inwongwan";
+	
+	const bankCode = user.bbn;
+	let accName = user.bbun;
 	let channleType;
-	const url = "https://mgp-pay.com:8443";
+	const url = "https://s-pays.com:13360";
 	let endpoint;
 	switch (chnlType) {
-		case "bank":
+		case "Bank":
 			channleType = "1"
 			endpoint = "/api/defray/V2"
 			break;
-		case "truepay":
+		case "Truepay":
 			channleType = "2"
 			endpoint = "/api/defray/V2"
 			break;
-		case "promptpay":
+		case "PromptPay":
 			channleType = "3"
 			endpoint = "/api/defray/V2"
 			break;
@@ -338,10 +340,10 @@ router.post("/smartpay_withdraw/:chanlType", auth, async (req, res) => {
 	const signType = "MD5";
 	const merchantNo = "API1715848040266637";
 	const hashKey = "00cd33f68443416eafbb6f30e1499370";
-	const bizAmt = req.body.amount;
-	const noticeUrl = "http://206.206.77.139:5000/api/pay/deposit_smartpay_callback";
+	const bizAmt = req.body[0];
+	const noticeUrl = "https://82.112.236.107:5000/api/pay/smartpay_deposit_callback";
 	const orderNo = require('crypto').randomBytes(6).toString('hex').toUpperCase();
-	const bankBranchName = "KBANK";
+	const bankBranchName = bankCode;
 	const cardNo = "0513172036";
 	console.log(orderNo);
 
