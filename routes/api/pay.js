@@ -316,7 +316,7 @@ router.post("/smartpay_withdraw", auth, async (req, res) => {
 	console.log(chnlType);
 	const user = await User.findById(req.user.id).select("-password");
 	
-	const bankCode = user.bbn;
+	const bankCode = 'T_KBANK';
 	let accName = user.bbun;
 	let channleType;
 	const url = "https://s-pays.com:13360";
