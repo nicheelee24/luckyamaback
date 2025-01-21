@@ -427,7 +427,7 @@ router.post("/smartpay_withdraw", auth, async (req, res) => {
 						.then((user) => {
 							user.balance =
 								Number(user.balance) -
-								Number(req.body.amount);
+								Number(req.body[0]);
 							user.save();
 							console.log("user balance updated");
 						})
