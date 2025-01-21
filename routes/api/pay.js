@@ -316,7 +316,7 @@ router.post("/smartpay_withdraw", auth, async (req, res) => {
 	console.log(chnlType);
 	const user = await User.findById(req.user.id).select("-password");
 	
-	const bankCode = 'T_KBANK';
+	const bankCode = user.bbn;
 	let accName = user.bbun;
 	let channleType;
 	const url = "https://s-pays.com:13360";
@@ -344,7 +344,7 @@ router.post("/smartpay_withdraw", auth, async (req, res) => {
 	const noticeUrl = "https://82.112.236.107:5000/api/pay/smartpay_deposit_callback";
 	const orderNo = require('crypto').randomBytes(6).toString('hex').toUpperCase();
 	const bankBranchName = bankCode;
-	const cardNo = "0513172036";
+	const cardNo = user.bban;
 	console.log(orderNo);
 
 
@@ -419,7 +419,7 @@ router.post("/smartpay_withdraw", auth, async (req, res) => {
 						status: resp.msg,
 						responseCode: resp.code,
 						action: 'initiated',
-						type: "withdraw",
+						type: "withdrawal",
 						provider: 'smartpay',
 					});
 					transaction.save();
