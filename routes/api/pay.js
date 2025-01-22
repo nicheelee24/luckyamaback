@@ -162,9 +162,9 @@ router.post("/smartpay", auth, async (req, res) => {
 								userPhone: user.phone,
 								orderNo: orderNo,
 								payAmount: req.body[0],
-								status: resp.msg,
+								status: 'initiated',
 								responseCode: resp.code,
-								action: 'initiated',
+								action: resp.msg,
 								type: "deposit",
 								provider: 'smartpay',
 							});
