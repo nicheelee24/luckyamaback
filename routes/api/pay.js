@@ -1281,7 +1281,7 @@ router.post("/bigpayz_withdraw", auth, async (req, res) => {
 	try {
 		console.log("bigpay withdraw url called");
 		console.log(req.body);
-		const amount = req.body.amount;
+		const amount = req.body[0];
 		const user = await User.findById(req.user.id).select("-password");
 		const WITHDRAW_URL = `https://payout-api.bigpayz.net/Payout/Withdrawal`;
 		
