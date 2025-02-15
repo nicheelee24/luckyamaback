@@ -538,7 +538,7 @@ router.post("/deposit_bigpay_bank",auth, async (req, res) => {
 
 		const MerchantCode = process.env.MerchantCode;
 		const ReturnURL = "https://ama777.cloud";
-		const FailedReturnURL = "https://ama777.cloud";
+		const FailedReturnURL = "https://games-back.kuab5b.easypanel.host/api/pay/bigpayz_deposit_fail";
 		const HTTPPostURL = "https://games-back.kuab5b.easypanel.host/api/pay/bigpayz_deposit_callback";
 		const Amount =req.body[0];
 		const Currency = "THB";
@@ -1096,7 +1096,52 @@ router.post("/deposit_bigpay_qr",auth, async (req, res) => {
 	}
 
 });
+router.post("/bigpayz_deposit_fail", async (req, res) => {
+	
+	console.log("deposit_fail_callback");
+	console.log(res.body);
+	const contract = 1234;
+		const apikey = process.env.BIGPAY_KEY;
+		const transaction = '';
+		const status = 1;
+		const status_message = '';
+		const ItemID = '1234';
+		const ItemDescription = 'item123';
+		const Amount = 100;
+		const Currency = 'thb';
+		const ClientName = 'client1';
+		const signature2 = '';
+		const created_at = '';
+		const updated_at = '';
+		
+	
 
+		// User.findById(trx.userid)
+		// 	.then((user) => {
+		// 		user.balance = Number(user.balance) + Number(payAmount);
+		// 		user.save();
+		// 	})
+		// 	.catch((err) => {
+		// 		console.log("/withdraw_callback error user", err);
+		// 	});
+
+		// Transaction.findOneAndUpdate(filter, update, { new: true })
+		// 	.then((updatedDocument) => {
+		// 		if (updatedDocument) {
+		// 			console.log(
+		// 				`Successfully updated document: ${updatedDocument}.`
+		// 			);
+		// 		} else {
+		// 			console.log("No document matches the provided query.");
+		// 		}
+		// 	})
+		// 	.catch((err) =>
+		// 		console.error(`Failed to find and update document: ${err}`)
+		// 	);
+	
+
+	res.json({ status: "0000" });
+});
 router.post("/bigpayz_deposit_callback", async (req, res) => {
 	
 	console.log("deposit_callback");
