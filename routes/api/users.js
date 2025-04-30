@@ -147,7 +147,7 @@ console.log("user password.."+user.password);
                     userName: user.name,
                 },
             };
-            // console.log('options: ' + options.url)
+             console.log('options: ' + options.data)
             axios
                 .request(options)
                 .then(async (response) => {
