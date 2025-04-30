@@ -95,7 +95,7 @@ console.log("user password.."+user.password);
                     cert: process.env.AWC_CERT,
                     agentId: process.env.AWC_AGENT_ID,
                     userId: user.name,
-                    currency: "LAK",
+                    currency: "THB",
                     betLimit: JSON.stringify({
                         // "BG": {
                         //     "LIVE": {
