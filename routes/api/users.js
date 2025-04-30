@@ -95,7 +95,7 @@ console.log("user password.."+user.password);
                     cert: process.env.AWC_CERT,
                     agentId: process.env.AWC_AGENT_ID,
                     userId: user.name,
-                    currency: "LAK",
+                    currency: "LAKK",
                     betLimit: JSON.stringify({
                         // "BG": {
                         //     "LIVE": {
@@ -151,6 +151,8 @@ console.log("user password.."+user.password);
             axios
                 .request(options)
                 .then(async (response) => {
+                    console.log("response data.."+response.data);
+                    console.log("response status.."+response.data.status);
                     if (response.data.status == "0000") {
                         await user.save();
                         res.json({ status: "0000", desc: response.data.desc });
