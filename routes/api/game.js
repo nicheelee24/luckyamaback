@@ -295,13 +295,13 @@ router.get("/play/:id", auth, async (req, res) => {
                 betLimit = {
                     HORSEBOOK: {
                         LIVE: {
-                            minorMaxbet: 5000,
-                            minorMinbet: 50,
-                            minorMaxBetSumPerHorse: 15000,
-                            maxbet: 5000,
-                            minbet: 50,
-                            maxBetSumPerHorse: 30000,
-                            fare: 50,
+                            minbet: 10000, // 50 for THB
+                            maxbet: 1000000,// 5000 for THB
+                            maxBetSumPerHorse: 3000000, // 30000 for THB
+                            minorMinbet: 10000, // 50 for THB
+                            minorMaxbet: 1000000,// 5000 for THB
+                            minorMaxBetSumPerHorse: 3000000, // 15000 for THB
+                           // fare: 50, //ENABLE FOR THB currency
                         },
                     },
                 };
@@ -321,7 +321,7 @@ router.get("/play/:id", auth, async (req, res) => {
                     betLimit = {
                         SEXYBCRT: {
                             LIVE: {
-                                limitId: [280901, 280903, 280904],
+                                limitId: [284501, 284502, 284503], // CHANGE LIMIT IDS TO [280901,280903,280904] for THB
                             },
                         },
                     };
@@ -330,24 +330,24 @@ router.get("/play/:id", auth, async (req, res) => {
                     betLimit = {
                         SV388: {
                             LIVE: {
-                                maxbet: 10000,
+                                maxbet: 10000, // 1000,
                                 minbet: 1,
                                 mindraw: 1,
-                                matchlimit: 20000,
-                                maxdraw: 4000,
+                                matchlimit: 10000, // SET 20000 for THB,
+                                maxdraw: 1000, // SET  4000 for THB
                             },
                         },
                     };
                 }
-                if (game.platform == "VENUS") {
-                    betLimit = {
-                        VENUS: {
-                            LIVE: {
-                                limitId: [280902, 280903],
-                            },
-                        },
-                    };
-                }
+                // if (game.platform == "VENUS") {
+                //     betLimit = {
+                //         VENUS: {
+                //             LIVE: {
+                //                 limitId: [280902, 280903],
+                //             },
+                //         },
+                //     };
+                // }
             }
 
             console.log(game.gameName);
@@ -535,13 +535,13 @@ router.post("/play", auth, async (req, res) => {
                 betLimit = {
                     HORSEBOOK: {
                         LIVE: {
-                            minorMaxbet: 5000,
-                            minorMinbet: 50,
-                            minorMaxBetSumPerHorse: 15000,
-                            maxbet: 5000,
-                            minbet: 50,
-                            maxBetSumPerHorse: 30000,
-                            fare: 50,
+                            minbet: 10000, // 50 for THB
+                            maxbet: 1000000,// 5000 for THB
+                            maxBetSumPerHorse: 3000000, // 30000 for THB
+                            minorMinbet: 10000, // 50 for THB
+                            minorMaxbet: 1000000,// 5000 for THB
+                            minorMaxBetSumPerHorse: 3000000, // 15000 for THB
+                           // fare: 50, //ENABLE FOR THB currency
                         },
                     },
                 };
@@ -559,7 +559,7 @@ router.post("/play", auth, async (req, res) => {
                 betLimit = {
                     SEXYBCRT: {
                         LIVE: {
-                            limitId: [280901, 280903, 280904],
+                            limitId: [284501, 284502, 284503], // CHANGE LIMIT IDS TO [280901,280903,280904] for THB
                         },
                     },
                 };
@@ -568,11 +568,11 @@ router.post("/play", auth, async (req, res) => {
                 betLimit = {
                     SV388: {
                         LIVE: {
-                            maxbet: 10000,
+                            maxbet: 10000, // 1000,
                             minbet: 1,
                             mindraw: 1,
-                            matchlimit: 20000,
-                            maxdraw: 4000,
+                            matchlimit: 10000, // SET 20000 for THB,
+                            maxdraw: 1000, // SET  4000 for THB
                         },
                     },
                 };
