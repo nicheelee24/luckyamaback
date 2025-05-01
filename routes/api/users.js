@@ -104,13 +104,13 @@ console.log("user password.."+user.password);
                         // },
                         HORSEBOOK: {
                             LIVE: {
-                                minbet: 50,
-                                maxbet: 5000,
-                                maxBetSumPerHorse: 30000,
-                                minorMinbet: 50,
-                                minorMaxbet: 5000,
-                                minorMaxBetSumPerHorse: 15000,
-                                fare: 50,
+                                minbet: 10000, // 50 for THB
+                                maxbet: 1000000,// 5000 for THB
+                                maxBetSumPerHorse: 3000000, // 30000 for THB
+                                minorMinbet: 10000, // 50 for THB
+                                minorMaxbet: 1000000,// 5000 for THB
+                                minorMaxBetSumPerHorse: 3000000, // 15000 for THB
+                               // fare: 50, //ENABLE FOR THB currency
                             },
                         },
                         // "HOTROAD": {
@@ -125,7 +125,7 @@ console.log("user password.."+user.password);
                         },
                         SEXYBCRT: {
                             LIVE: {
-                                limitId: [280901, 280903, 280904], // [110901,110902]
+                                limitId: [284501, 284502, 284503], // CHANGE LIMIT IDS TO [280901,280903,280904] for THB
                             },
                         },
                         SV388: {
@@ -133,8 +133,8 @@ console.log("user password.."+user.password);
                                 maxbet: 10000, // 1000,
                                 minbet: 1,
                                 mindraw: 1,
-                                matchlimit: 20000, // 1000,
-                                maxdraw: 4000, // 100
+                                matchlimit: 10000, // SET 20000 for THB,
+                                maxdraw: 1000, // SET  4000 for THB
                             },
                         },
                         // VENUS: {
